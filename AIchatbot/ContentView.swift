@@ -39,7 +39,7 @@ private struct OnboardingView: View {
             ZStack {
                 FluidBackground()
 
-                VStack(spacing: 20) {
+                VStack(alignment: .center, spacing: 20) {
                     Spacer(minLength: max(20, geometry.safeAreaInsets.top + 8))
 
                     Image("OnboardingIcon")
@@ -48,9 +48,8 @@ private struct OnboardingView: View {
                         .scaledToFit()
                         .frame(width: iconSize, height: iconSize)
                         .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
-                        .frame(maxWidth: .infinity, alignment: .center)
 
-                    VStack(spacing: 12) {
+                    VStack(alignment: .center, spacing: 12) {
                         Text("itelo")
                             .font(.system(size: 46, weight: .bold, design: .rounded))
                             .foregroundStyle(.white)
@@ -67,9 +66,7 @@ private struct OnboardingView: View {
                             .multilineTextAlignment(.center)
                             .lineLimit(nil)
                     }
-                    .frame(maxWidth: 420, alignment: .center)
-                    .padding(.horizontal, horizontalInset)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .frame(maxWidth: min(420, geometry.size.width - (horizontalInset * 2)), alignment: .center)
 
                     Spacer()
 
@@ -79,11 +76,10 @@ private struct OnboardingView: View {
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .tint(.blue)
                         .frame(maxWidth: 360)
-                        .padding(.horizontal, horizontalInset)
                         .padding(.bottom, max(22, geometry.safeAreaInsets.bottom + 8))
-                        .frame(maxWidth: .infinity, alignment: .center)
                 }
-                // Force true horizontal centering regardless of intermediate padding/frames.
+                .padding(.horizontal, horizontalInset)
+                // Keep the whole onboarding content centered within the screen bounds.
                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
             }
         }
