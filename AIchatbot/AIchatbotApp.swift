@@ -12,7 +12,9 @@ import SwiftData
 struct AIchatbotApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            // Keep old models for migration
+            ChatSession.self,
+            ChatMessage.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -24,8 +26,12 @@ struct AIchatbotApp: App {
     }()
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("itelo") {
             ContentView()
+        }
+        .windowResizability(.contentSize)
+        .commands {
+            SidebarCommands()
         }
         .modelContainer(sharedModelContainer)
     }

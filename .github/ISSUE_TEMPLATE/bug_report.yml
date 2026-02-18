@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a reproducible problem
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug report. Please include enough detail to reproduce.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      placeholder: What is broken?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include exact steps, inputs, and expected result.
+      placeholder: |
+        1. Open app
+        2. Tap ...
+        3. See error ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Device/Simulator, iOS version, Xcode version
+      placeholder: iPhone 17 Pro simulator, iOS 26.2, Xcode 17.x
+    validations:
+      required: true

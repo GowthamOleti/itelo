@@ -3,8 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-	</array>
+	<array/>
+	<key>CFBundleName</key>
+	<string>itelo</string>
+	<key>CFBundleDisplayName</key>
+	<string>itelo</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>This app needs access to Reminders to create reminders for you.</string>
 </dict>
 </plist>

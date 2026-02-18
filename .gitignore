@@ -1,0 +1,36 @@
+# macOS
+.DS_Store
+
+# Xcode user-specific
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+
+# Xcode build output
+DerivedData/
+build/
+
+# SwiftPM
+.build/
+Packages/
+Package.resolved
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build/
+
+# Tuist
+.tuist-bin/
+.tuist-cache/
+
+# Model and large binary artifacts
+AIchatbot/Models/
