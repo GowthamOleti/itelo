@@ -6,9 +6,11 @@
 //
 
 import Foundation
-import FoundationModels
 import SwiftData
 import NaturalLanguage
+
+#if canImport(FoundationModels)
+import FoundationModels
 
 @available(iOS 26.0, *)
 class AISearchService {
@@ -272,3 +274,4 @@ class SearchViewModel {
         }
     }
 }
+#endif
