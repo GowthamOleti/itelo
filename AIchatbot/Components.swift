@@ -99,25 +99,48 @@ struct FluidBackground: View {
 struct GlassBubble: View {
     var isUser: Bool
     
+    @ViewBuilder
     var body: some View {
-        RoundedRectangle(cornerRadius: 24, style: .continuous)
-            .fill(isUser ? Color.blue.opacity(0.4) : Color.white.opacity(0.05))
-            .glassEffect(isUser ? .clear : .regular, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                .white.opacity(isUser ? 0.3 : 0.2),
-                                .white.opacity(isUser ? 0.1 : 0.05)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
-            )
-            .shadow(color: isUser ? .blue.opacity(0.3) : .black.opacity(0.2), radius: 10, x: 0, y: 5)
+        let bubbleShape = RoundedRectangle(cornerRadius: 24, style: .continuous)
+
+        if isUser {
+            bubbleShape
+                .fill(Color.blue.opacity(0.4))
+                .overlay(
+                    bubbleShape
+                        .stroke(
+                            LinearGradient(
+                                colors: [
+                                    .white.opacity(0.3),
+                                    .white.opacity(0.1)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 1
+                        )
+                )
+                .shadow(color: .blue.opacity(0.3), radius: 10, x: 0, y: 5)
+        } else {
+            bubbleShape
+                .fill(Color.white.opacity(0.05))
+                .glassEffect(Material.regular, in: bubbleShape)
+                .overlay(
+                    bubbleShape
+                        .stroke(
+                            LinearGradient(
+                                colors: [
+                                    .white.opacity(0.2),
+                                    .white.opacity(0.05)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 1
+                        )
+                )
+                .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
+        }
     }
 }
 
