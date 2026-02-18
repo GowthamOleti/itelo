@@ -7,10 +7,12 @@
 
 import SwiftUI
 
-@available(iOS 26.0, *)
+@available(iOS 26.1, *)
 struct InfoView: View {
     @Environment(\.dismiss) var dismiss
     var onScroll: () -> Void
+
+    @State private var isShowingPrivacyPolicy = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -33,7 +35,7 @@ struct InfoView: View {
             .padding(.bottom, 20)
             
             // Content
-            ScrollView {
+            ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
                     // About Section
                     VStack(alignment: .leading, spacing: 8) {
@@ -98,8 +100,36 @@ struct InfoView: View {
                             DetailRow(label: "Model", value: "Apple Foundation Model")
                             DetailRow(label: "Processing", value: "On-Device")
                             DetailRow(label: "Data Storage", value: "Local Only")
-                            DetailRow(label: "Minimum iOS", value: "iOS 18.0")
+                            DetailRow(label: "Minimum iOS", value: "iOS 26.1")
                         }
+                    }
+
+                    Divider()
+
+                    // Privacy Policy
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Privacy Policy")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundStyle(.primary)
+
+                        Button {
+                            isShowingPrivacyPolicy = true
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "hand.raised.fill")
+                                    .font(.system(size: 14, weight: .semibold))
+                                Text("Read Privacy Policy")
+                                    .font(.system(size: 15, weight: .semibold))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(.tertiary)
+                            }
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 12)
+                        }
+                        .buttonStyle(.plain)
+                        .glassEffect(SwiftUI.Glass.regular, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                     
                     Divider()
@@ -135,13 +165,15 @@ struct InfoView: View {
                     onScroll()
                 }
             }
-            .scrollIndicators(.hidden)
+        }
+        .sheet(isPresented: $isShowingPrivacyPolicy) {
+            PrivacyPolicyView()
         }
     }
 }
 
 // MARK: - Scroll Offset Preference Key
-@available(iOS 26.0, *)
+@available(iOS 26.1, *)
 struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
@@ -150,7 +182,7 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
 }
 
 // MARK: - InfoView with Detent Management
-@available(iOS 26.0, *)
+@available(iOS 26.1, *)
 struct InfoViewWithDetent: View {
     @State private var shouldExpand = false
     
@@ -165,7 +197,7 @@ struct InfoViewWithDetent: View {
 }
 
 // MARK: - Feature Row Component
-@available(iOS 26.0, *)
+@available(iOS 26.1, *)
 struct FeatureRow: View {
     let icon: String
     let title: String
@@ -193,7 +225,7 @@ struct FeatureRow: View {
 }
 
 // MARK: - Detail Row Component
-@available(iOS 26.0, *)
+@available(iOS 26.1, *)
 struct DetailRow: View {
     let label: String
     let value: String
@@ -217,4 +249,58 @@ struct DetailRow: View {
     InfoView(onScroll: {})
         .padding()
         .background(Color.black)
+}
+
+@available(iOS 26.1, *)
+private struct PrivacyPolicyView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 14) {
+                    Text("Privacy Policy")
+                        .font(.system(size: 28, weight: .bold, design: .rounded))
+
+                    Text("itelo is designed to keep your data on your device.")
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundStyle(.secondary)
+
+                    Group {
+                        Text("Data Processing")
+                            .font(.system(size: 18, weight: .semibold))
+                        Text("Conversations are generated on-device. We do not send your chat content to a server.")
+                            .foregroundStyle(.secondary)
+
+                        Text("Data Storage")
+                            .font(.system(size: 18, weight: .semibold))
+                        Text("Chats are stored locally on your device. Deleting the app removes locally stored data.")
+                            .foregroundStyle(.secondary)
+
+                        Text("Analytics")
+                            .font(.system(size: 18, weight: .semibold))
+                        Text("We do not collect analytics or tracking data.")
+                            .foregroundStyle(.secondary)
+
+                        Text("Contact")
+                            .font(.system(size: 18, weight: .semibold))
+                        Text("Questions: oletigowtham8803@gmail.com")
+                            .foregroundStyle(.secondary)
+                    }
+                    .font(.system(size: 15, weight: .regular))
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 18)
+            }
+            .navigationTitle("Privacy")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") { dismiss() }
+                        .font(.system(size: 16, weight: .semibold))
+                }
+            }
+        }
+        .preferredColorScheme(.dark)
+    }
 }
