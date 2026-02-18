@@ -22,6 +22,7 @@ class ChatViewModel {
     
     // Switch this to CoreMLAIService() when you have the model file!
     private let aiService: AIService
+    private let wordCharacterSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "'’"))
 
     // iOS 26 Features
     private var siriSuggestionsService: SiriSuggestionsService?
@@ -179,13 +180,57 @@ class ChatViewModel {
     private func streamResponse(_ stream: AsyncThrowingStream<String, Error>, into message: ChatMessage) {
         Task {
             var currentText = ""
-            for try await chunk in stream {
-                await MainActor.run {
+            var isInsideWord = false
+            var didTriggerGenerationHaptic = false
+
+            do {
+                for try await chunk in stream {
                     currentText.append(chunk)
-                    message.text = currentText
+                    let startedWords = countStartedWords(in: chunk, isInsideWord: &isInsideWord)
+                    let shouldTriggerGenerationHaptic = !didTriggerGenerationHaptic
+                    didTriggerGenerationHaptic = true
+
+                    await MainActor.run {
+                        if shouldTriggerGenerationHaptic {
+                            HapticManager.shared.impact(style: .soft)
+                        }
+
+                        message.text = currentText
+
+                        if startedWords > 0 {
+                            for _ in 0..<startedWords {
+                                HapticManager.shared.selection()
+                            }
+                        }
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    HapticManager.shared.notification(type: .error)
                 }
             }
         }
+    }
+
+    private func countStartedWords(in chunk: String, isInsideWord: inout Bool) -> Int {
+        var startedWords = 0
+
+        for character in chunk {
+            if isWordCharacter(character) {
+                if !isInsideWord {
+                    startedWords += 1
+                }
+                isInsideWord = true
+            } else {
+                isInsideWord = false
+            }
+        }
+
+        return startedWords
+    }
+
+    private func isWordCharacter(_ character: Character) -> Bool {
+        character.unicodeScalars.allSatisfy { wordCharacterSet.contains($0) }
     }
     
     private func handleReminder() {

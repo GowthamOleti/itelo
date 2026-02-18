@@ -32,48 +32,60 @@ private struct OnboardingView: View {
     let onGetStarted: () -> Void
     
     var body: some View {
-        ZStack {
-            FluidBackground()
-            
-            VStack(spacing: 28) {
-                Spacer(minLength: 40)
+        GeometryReader { geometry in
+            let horizontalInset: CGFloat = 24
+            let iconSize = min(152, geometry.size.width * 0.34)
 
-                VStack(alignment: .leading, spacing: 18) {
-                    Text("itelo")
-                        .font(.system(size: 46, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
+            ZStack {
+                FluidBackground()
 
-                    Text("Private, on-device AI for everyday tasks.")
-                        .font(.system(size: 20, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.white)
+                VStack(spacing: 20) {
+                    Spacer(minLength: max(20, geometry.safeAreaInsets.top + 8))
 
-                    Text("Chat naturally, create reminders, and explore ideas while your data stays on your device.")
-                        .font(.system(size: 17, weight: .regular, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.86))
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .padding(.horizontal, 22)
-                .padding(.vertical, 26)
-                .frame(maxWidth: 560, alignment: .leading)
-                .glassEffect(Material.regular, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-                .padding(.horizontal, 24)
-                
-                Spacer()
-                
-                VStack(spacing: 10) {
+                    Image("OnboardingIcon")
+                        .resizable()
+                        .interpolation(.high)
+                        .scaledToFit()
+                        .frame(width: iconSize, height: iconSize)
+                        .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+                        .frame(maxWidth: .infinity, alignment: .center)
+
+                    VStack(spacing: 12) {
+                        Text("itelo")
+                            .font(.system(size: 46, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+
+                        Text("Private, on-device AI for everyday tasks.")
+                            .font(.system(size: 21, weight: .semibold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+
+                        Text("Chat naturally and explore ideas while your data stays on your device.")
+                            .font(.system(size: 19, weight: .regular, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.85))
+                            .multilineTextAlignment(.center)
+                            .lineLimit(nil)
+                    }
+                    .frame(maxWidth: 420, alignment: .center)
+                    .padding(.horizontal, horizontalInset)
+                    .frame(maxWidth: .infinity, alignment: .center)
+
+                    Spacer()
+
                     Button("Get Started", action: onGetStarted)
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .tint(.blue)
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: 360)
+                        .padding(.horizontal, horizontalInset)
+                        .padding(.bottom, max(22, geometry.safeAreaInsets.bottom + 8))
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
-                .frame(maxWidth: 560)
-                .padding(.horizontal, 24)
-                .padding(.bottom, 18)
+                // Force true horizontal centering regardless of intermediate padding/frames.
+                .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
             }
-            .safeAreaPadding(.top, 24)
-            .safeAreaPadding(.bottom, 8)
         }
         .preferredColorScheme(.dark)
     }
