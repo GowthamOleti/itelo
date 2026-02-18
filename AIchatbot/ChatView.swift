@@ -394,12 +394,12 @@ struct ChatInterface: View {
                         }
                         
                         // Text input container
-                        TextField("Ask anything...", text: $viewModel.inputText, axis: .vertical)
+                        TextField("Ask anything...", text: $viewModel.inputText)
                             .foregroundStyle(.white)
                             .font(.system(size: 16, weight: .regular))
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
-                            .lineLimit(1...4)
+                            .lineLimit(1)
                             .padding(.horizontal, 18)
                             .padding(.vertical, 14)
                             .frame(minHeight: 50)
@@ -520,8 +520,9 @@ struct GreetingView: View {
                 .foregroundStyle(.white.opacity(0.7))
                 .shadow(color: .white.opacity(0.4), radius: glowIntensity * 0.8, x: 0, y: 0)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .padding(.top, 80)
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .padding(.horizontal, 24)
         .background(Color.clear)
         .onAppear {
             updateGreeting()

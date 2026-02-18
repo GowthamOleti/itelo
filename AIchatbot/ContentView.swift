@@ -35,39 +35,45 @@ private struct OnboardingView: View {
         ZStack {
             FluidBackground()
             
-            VStack(spacing: 24) {
-                Spacer()
-                
-                VStack(spacing: 14) {
+            VStack(spacing: 28) {
+                Spacer(minLength: 40)
+
+                VStack(alignment: .leading, spacing: 18) {
                     Text("itelo")
-                        .font(.system(size: 52, weight: .bold, design: .rounded))
+                        .font(.system(size: 46, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
-                    
-                    Text("Your private, on-device AI companion for chat, reminders, and image ideas.")
-                        .font(.system(size: 17, weight: .medium, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.85))
-                        .multilineTextAlignment(.center)
+
+                    Text("Private, on-device AI for everyday tasks.")
+                        .font(.system(size: 20, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.white)
+
+                    Text("Chat naturally, create reminders, and explore ideas while your data stays on your device.")
+                        .font(.system(size: 17, weight: .regular, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.86))
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(.horizontal, 24)
-                .padding(.vertical, 28)
+                .padding(.horizontal, 22)
+                .padding(.vertical, 26)
+                .frame(maxWidth: 560, alignment: .leading)
                 .glassEffect(Material.regular, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 24)
                 
                 Spacer()
                 
-                Button(action: onGetStarted) {
-                    Text("Get Started")
+                VStack(spacing: 10) {
+                    Button("Get Started", action: onGetStarted)
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.large)
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.white)
+                        .tint(.blue)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .glassEffect(Material.regular, in: Capsule())
                 }
-                .buttonStyle(.plain)
-                .padding(.horizontal, 20)
-                .padding(.bottom, 30)
+                .frame(maxWidth: 560)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 18)
             }
-            .padding(.top, 30)
+            .safeAreaPadding(.top, 24)
+            .safeAreaPadding(.bottom, 8)
         }
         .preferredColorScheme(.dark)
     }
