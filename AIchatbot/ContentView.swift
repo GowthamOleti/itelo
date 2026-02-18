@@ -66,7 +66,9 @@ private struct OnboardingView: View {
                             .multilineTextAlignment(.center)
                             .lineLimit(nil)
                     }
-                    .frame(maxWidth: min(420, geometry.size.width - (horizontalInset * 2)), alignment: .center)
+                    // Avoid double-applying horizontal insets (outer padding already handles screen edges).
+                    .frame(maxWidth: 420)
+                    .frame(maxWidth: .infinity, alignment: .center)
 
                     Spacer()
 
