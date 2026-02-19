@@ -534,22 +534,7 @@ struct GreetingView: View {
     }
     
     private func updateGreeting() {
-        // Get Name
-        let deviceName = UIDevice.current.name
-        var name = "there"
-        
-        if let extracted = deviceName.split(separator: "’").first { // "Gowtham’s iPhone" -> "Gowtham"
-            name = String(extracted)
-        } else if let extracted = deviceName.split(separator: "'").first {
-             name = String(extracted)
-        }
-        
-        // If the name is just "iPhone", fallback to "there"
-        if name == "iPhone" {
-            userName = "there"
-        } else {
-            userName = name
-        }
+        userName = "there"
         
         // Get Time
         let hour = Calendar.current.component(.hour, from: Date())
