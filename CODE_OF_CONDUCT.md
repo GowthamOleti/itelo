@@ -43,7 +43,7 @@ when an individual is officially representing the project.
 
 ## Enforcement
 
-Report unacceptable behavior to: `security@itelo.app`
+Report unacceptable behavior to: `oletigowtham8803@gmail.com`
 
 All reports will be reviewed and investigated promptly and fairly.
 
