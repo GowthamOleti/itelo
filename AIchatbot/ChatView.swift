@@ -390,7 +390,7 @@ struct ChatInterface: View {
                                 .font(.system(size: 18, weight: .medium))
                                 .foregroundStyle(.white)
                                 .frame(width: 40, height: 40)
-                                .glassEffect(Material.regular, in: Circle())
+                                .glassEffect(SwiftUI.Glass.regular, in: Circle())
                         }
                         
                         // Text input container
@@ -403,7 +403,7 @@ struct ChatInterface: View {
                             .padding(.horizontal, 18)
                             .padding(.vertical, 14)
                             .frame(minHeight: 50)
-                            .glassEffect(Material.regular, in: Capsule())
+                            .glassEffect(SwiftUI.Glass.regular, in: Capsule())
                             .focused($isFocused)
                             .submitLabel(.send)
                             .onSubmit {
@@ -420,7 +420,7 @@ struct ChatInterface: View {
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(.white)
                             .frame(width: 40, height: 40)
-                            .glassEffect(Material.regular, in: Circle())
+                            .glassEffect(SwiftUI.Glass.regular, in: Circle())
                         }
                         .disabled(viewModel.inputText.isEmpty)
                         .opacity(viewModel.inputText.isEmpty ? 0.5 : 1.0)
