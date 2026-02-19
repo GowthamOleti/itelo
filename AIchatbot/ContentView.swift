@@ -33,58 +33,61 @@ private struct OnboardingView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let horizontalInset: CGFloat = 24
-            let iconSize = min(152, geometry.size.width * 0.34)
+            let contentWidth = min(420, max(0, geometry.size.width - 48))
 
-            ZStack {
+            ZStack(alignment: .center) {
                 FluidBackground()
+                    .allowsHitTesting(false)
 
-                VStack(alignment: .center, spacing: 20) {
-                    Spacer(minLength: max(20, geometry.safeAreaInsets.top + 8))
+                VStack(spacing: 36) {
+                    VStack(spacing: 18) {
+                        Image("OnboardingIcon")
+                            .resizable()
+                            .interpolation(.high)
+                            .scaledToFit()
+                            .frame(width: 152, height: 152)
+                            .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+                            .shadow(color: .black.opacity(0.35), radius: 24, y: 12)
 
-                    Image("OnboardingIcon")
-                        .resizable()
-                        .interpolation(.high)
-                        .scaledToFit()
-                        .frame(width: iconSize, height: iconSize)
-                        .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+                        VStack(spacing: 10) {
+                            Text("itelo")
+                                .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                                .foregroundStyle(.white)
+                                .multilineTextAlignment(.center)
+                                .accessibilityAddTraits(.isHeader)
 
-                    VStack(alignment: .center, spacing: 12) {
-                        Text("itelo")
-                            .font(.system(size: 46, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .multilineTextAlignment(.center)
+                            Text("Private, on-device AI for everyday tasks.")
+                                .font(.system(.title3, design: .rounded, weight: .semibold))
+                                .foregroundStyle(.white)
+                                .multilineTextAlignment(.center)
 
-                        Text("Private, on-device AI for everyday tasks.")
-                            .font(.system(size: 21, weight: .semibold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .multilineTextAlignment(.center)
-
-                        Text("Chat naturally and explore ideas while your data stays on your device.")
-                            .font(.system(size: 19, weight: .regular, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.85))
-                            .multilineTextAlignment(.center)
-                            .lineLimit(nil)
+                            Text("Chat naturally and explore ideas while your data stays on your device.")
+                                .font(.system(.body, design: .rounded))
+                                .foregroundStyle(.white.opacity(0.85))
+                                .multilineTextAlignment(.center)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
                     }
-                    // Avoid double-applying horizontal insets (outer padding already handles screen edges).
                     .frame(maxWidth: 420)
-                    .frame(maxWidth: .infinity, alignment: .center)
 
-                    Spacer()
-
-                    Button("Get Started", action: onGetStarted)
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.large)
-                        .font(.system(size: 18, weight: .semibold, design: .rounded))
-                        .tint(.blue)
-                        .frame(maxWidth: 360)
-                        .padding(.bottom, max(22, geometry.safeAreaInsets.bottom + 8))
+                    Button(action: onGetStarted) {
+                        Text("Get Started")
+                            .font(.system(.headline, design: .rounded, weight: .semibold))
+                            .foregroundStyle(.black)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .buttonBorderShape(.capsule)
+                    .tint(.white)
                 }
-                .padding(.horizontal, horizontalInset)
-                // Keep the whole onboarding content centered within the screen bounds.
-                .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
+                .frame(width: contentWidth)
+                // Hard-center the whole onboarding group in the screen's coordinate space.
+                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
             }
         }
+        // Center relative to the full screen, not the safe-area-adjusted content region.
+        .ignoresSafeArea()
         .preferredColorScheme(.dark)
     }
 }
