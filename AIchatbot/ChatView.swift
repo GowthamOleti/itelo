@@ -440,18 +440,16 @@ struct ChatInterface: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        onShowHistory()
-                    }) {
-                        Image(systemName: "list.bullet")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundStyle(.white)
-                            .frame(width: 40, height: 40)
-                            .glassEffect(Material.regular, in: Circle())
-                    }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: {
+                    onShowHistory()
+                }) {
+                    Image(systemName: "list.bullet")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.white)
                 }
+            }
             
             ToolbarItem(placement: .principal) {
                 Text("itelo")
@@ -465,18 +463,16 @@ struct ChatInterface: View {
                     )
             }
             
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        showInfo = true
-                    }) {
-                        Image(systemName: "info.circle")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundStyle(.white)
-                            .frame(width: 40, height: 40)
-                            .glassEffect(Material.regular, in: Circle())
-                    }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    showInfo = true
+                }) {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.white)
                 }
             }
+        }
         .sheet(isPresented: $showInfo) {
             if #available(iOS 26.0, *) {
                 InfoViewWithDetent()
