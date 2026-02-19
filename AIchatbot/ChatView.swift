@@ -314,9 +314,10 @@ struct ChatInterface: View {
     @State private var dragOffset: CGFloat = 0
     
     var body: some View {
+        GeometryReader { geometry in
             ScrollViewReader { proxy in
-            ScrollView {
-                LazyVStack(spacing: 16) {
+                ScrollView {
+                    LazyVStack(spacing: 16) {
                     ForEach(viewModel.messages) { message in
                         MessageRow(message: message)
                             .id(message.id)
@@ -324,46 +325,46 @@ struct ChatInterface: View {
                     
                     if viewModel.isThinking {
                         HStack {
-                                PremiumTypingIndicator()
-                                Spacer()
-                            }
-                            .padding(.horizontal)
-                            .transition(.opacity)
-                            .id("thinking")
+                            PremiumTypingIndicator()
+                            Spacer()
                         }
+                        .padding(.horizontal)
+                        .transition(.opacity)
+                        .id("thinking")
                     }
-                    .padding(.bottom, 20)
                 }
+                .padding(.bottom, 20)
                 .frame(maxWidth: .infinity, alignment: .top)
+                // Ensure the stack fills the viewport so the empty-state overlay can center properly.
+                .frame(minHeight: geometry.size.height, alignment: .top)
                 .overlay {
                     if viewModel.messages.isEmpty {
                         GreetingView()
                     }
                 }
-                .scrollDismissesKeyboard(.interactively)
                 .onChange(of: viewModel.messages.count) {
                     if let lastId = viewModel.messages.last?.id {
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                             proxy.scrollTo(lastId, anchor: .bottom)
                         }
-                        // Haptic feedback for new message
                         HapticManager.shared.impact(style: .light)
                     }
                 }
-                .onChange(of: viewModel.isThinking) {
-                    if viewModel.isThinking {
-                        withAnimation {
-                            proxy.scrollTo("thinking", anchor: .bottom)
-                        }
-                        // Haptic feedback for thinking start
-                        HapticManager.shared.impact(style: .soft)
-                    }
                 }
-                .onChange(of: viewModel.shouldTriggerImagePlayground) {
-                    if viewModel.shouldTriggerImagePlayground {
-                        showImagePlayground = true
-                        viewModel.shouldTriggerImagePlayground = false // Reset flag
+            }
+            .scrollDismissesKeyboard(.interactively)
+            .onChange(of: viewModel.isThinking) {
+                if viewModel.isThinking {
+                    withAnimation {
+                        proxy.scrollTo("thinking", anchor: .bottom)
                     }
+                    HapticManager.shared.impact(style: .soft)
+                }
+            }
+            .onChange(of: viewModel.shouldTriggerImagePlayground) {
+                if viewModel.shouldTriggerImagePlayground {
+                    showImagePlayground = true
+                    viewModel.shouldTriggerImagePlayground = false
                 }
             }
             .defaultScrollAnchor(.top)
@@ -371,7 +372,6 @@ struct ChatInterface: View {
             .contentMargins(.top, 0, for: .scrollContent)
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 0) {
-                    // Conversation Starters
                     if viewModel.messages.isEmpty {
                         ConversationStartersView { starter in
                             viewModel.inputText = starter
@@ -379,9 +379,7 @@ struct ChatInterface: View {
                         }
                     }
                     
-                    // New polished text input design
                     HStack(spacing: 12) {
-                        // Image button
                         Button(action: {
                             HapticManager.shared.impact(style: .medium)
                             showImagePlayground = true
@@ -390,10 +388,9 @@ struct ChatInterface: View {
                                 .font(.system(size: 18, weight: .medium))
                                 .foregroundStyle(.white)
                                 .frame(width: 40, height: 40)
-                                .glassEffect(Material.regular, in: Circle())
+                                .glassEffect(SwiftUI.Glass.regular, in: Circle())
                         }
                         
-                        // Text input container
                         TextField("Ask anything...", text: $viewModel.inputText)
                             .foregroundStyle(.white)
                             .font(.system(size: 16, weight: .regular))
@@ -403,7 +400,7 @@ struct ChatInterface: View {
                             .padding(.horizontal, 18)
                             .padding(.vertical, 14)
                             .frame(minHeight: 50)
-                            .glassEffect(Material.regular, in: Capsule())
+                            .glassEffect(SwiftUI.Glass.regular, in: Capsule())
                             .focused($isFocused)
                             .submitLabel(.send)
                             .onSubmit {
@@ -412,26 +409,24 @@ struct ChatInterface: View {
                                 }
                             }
                         
-                        // Send button
-                        Button(action: {
-                            sendMessageWithHaptics()
-                        }) {
+                        Button(action: { sendMessageWithHaptics() }) {
                             Image(systemName: "arrow.up")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 40, height: 40)
-                            .glassEffect(Material.regular, in: Circle())
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(.white)
+                                .frame(width: 40, height: 40)
+                                .glassEffect(SwiftUI.Glass.regular, in: Circle())
                         }
                         .disabled(viewModel.inputText.isEmpty)
                         .opacity(viewModel.inputText.isEmpty ? 0.5 : 1.0)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
-                
-                Text("All content is generated securely on-device. No data is sent to the cloud.")
-                    .font(.system(size: 8))
-                    .foregroundStyle(.white.opacity(0.4))
-                    .padding(.bottom, 4)
+                    
+                    Text("All content is generated securely on-device. No data is sent to the cloud.")
+                        .font(.system(size: 8))
+                        .foregroundStyle(.white.opacity(0.4))
+                        .padding(.bottom, 4)
+                }
             }
             .animation(nil, value: isFocused)
         }
@@ -440,18 +435,16 @@ struct ChatInterface: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        onShowHistory()
-                    }) {
-                        Image(systemName: "list.bullet")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundStyle(.white)
-                            .frame(width: 40, height: 40)
-                            .glassEffect(Material.regular, in: Circle())
-                    }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: {
+                    onShowHistory()
+                }) {
+                    Image(systemName: "list.bullet")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.white)
                 }
+            }
             
             ToolbarItem(placement: .principal) {
                 Text("itelo")
@@ -465,37 +458,35 @@ struct ChatInterface: View {
                     )
             }
             
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        showInfo = true
-                    }) {
-                        Image(systemName: "info.circle")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundStyle(.white)
-                            .frame(width: 40, height: 40)
-                            .glassEffect(Material.regular, in: Circle())
-                    }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    showInfo = true
+                }) {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.white)
                 }
             }
+        }
         .sheet(isPresented: $showInfo) {
             if #available(iOS 26.0, *) {
                 InfoViewWithDetent()
             }
         }
         .imagePlaygroundSheet(isPresented: $showImagePlayground, concept: viewModel.imagePrompt) { url in
-                if let data = try? Data(contentsOf: url) {
-                    // Add bot's image response
-                    if let session = viewModel.currentSession {
-                        let botMessage = ChatMessage(text: "Here's your image!", isUser: false, imageData: data)
-                        botMessage.session = session
-                        session.messages.append(botMessage)
-                        viewModel.messages.append(botMessage)
-                    }
-                    
-                    // Clear the prompt
-                    viewModel.imagePrompt = ""
+            if let data = try? Data(contentsOf: url) {
+                // Add bot's image response
+                if let session = viewModel.currentSession {
+                    let botMessage = ChatMessage(text: "Here's your image!", isUser: false, imageData: data)
+                    botMessage.session = session
+                    session.messages.append(botMessage)
+                    viewModel.messages.append(botMessage)
                 }
+                
+                // Clear the prompt
+                viewModel.imagePrompt = ""
             }
+        }
 
         .preferredColorScheme(.dark)
     }
