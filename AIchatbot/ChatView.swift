@@ -340,7 +340,6 @@ struct ChatInterface: View {
                         GreetingView()
                     }
                 }
-                .scrollDismissesKeyboard(.interactively)
                 .onChange(of: viewModel.messages.count) {
                     if let lastId = viewModel.messages.last?.id {
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
@@ -350,11 +349,13 @@ struct ChatInterface: View {
                         HapticManager.shared.impact(style: .light)
                     }
                 }
-                .onChange(of: viewModel.isThinking) {
-                    if viewModel.isThinking {
-                        withAnimation {
-                            proxy.scrollTo("thinking", anchor: .bottom)
-                        }
+            }
+            .scrollDismissesKeyboard(.interactively)
+            .onChange(of: viewModel.isThinking) {
+                if viewModel.isThinking {
+                    withAnimation {
+                        proxy.scrollTo("thinking", anchor: .bottom)
+                    }
                         // Haptic feedback for thinking start
                         HapticManager.shared.impact(style: .soft)
                     }
